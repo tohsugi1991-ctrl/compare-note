@@ -1,15 +1,29 @@
 # AI比較ノート(compare-note)
 
-複数AIの回答を貼り付けて横並び比較し、採用した回答と理由(1〜3行)を記録できるローカルWebアプリ。バックエンドなし、データはブラウザのlocalStorageのみに保存される。
+複数AIの回答を横に並べて比較し、選んだ理由を残せるノートです。
+ChatGPT・Claude・Geminiなど複数のAIを使い分けている人向け。
+「どの回答を採用したか、なぜか」を忘れて後で困る、をなくします。
 
-詳細な設計判断は[docs/](./docs/)の仕様書を参照。
+バックエンドなし、データはブラウザのlocalStorageのみに保存されるローカルWebアプリです。
 
-- [issue-001_mvp_spec.md](./docs/issue-001_mvp_spec.md) — 何を作るか・何を作らないか
-- [issue-001_user_flow.md](./docs/issue-001_user_flow.md) — 画面遷移・状態設計
-- [issue-001_data_schema.md](./docs/issue-001_data_schema.md) — データ構造
-- [issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) — Day1〜7の実装計画
+## スクリーンショット
 
-現在の進捗は[PROJECT_STATUS.md](./PROJECT_STATUS.md)、再開時に読むべきファイルは[resume.md](./resume.md)を参照。
+案件一覧(未決定/決定済みが一目でわかる):
+
+![案件一覧](./docs/screenshots/top.png)
+
+案件詳細(複数AIの回答を比較し、採用理由を記録):
+
+![案件詳細](./docs/screenshots/detail-decided.png)
+
+## 使い方
+
+1. 「+ 新しい案件」からタイトル(必須)とcontext(任意)を入力して案件を作成する
+2. 案件詳細画面で、AIの回答をsource(ChatGPT/Claude/Gemini/Copilot/Perplexity/Other)を選んで貼り付ける。2件以上貼り付けると横並びで比較できる
+3. 採用したい回答にラジオボタンでチェックし、採用理由(必須)と要約(任意)を入力して「決定を保存」
+4. 決定内容は画面最上部にサマリーカードとして表示される。案件一覧に戻ると「決定済み」バッジが付き、いつ再訪しても採用元・理由をすぐ思い出せる
+
+データはブラウザ単位で保存されるため、PCとスマホ、別のブラウザでは共有されません。キャッシュ削除やシークレットモードでは消えます。エクスポート・バックアップ機能は現時点ではありません。
 
 ## セットアップ
 
@@ -32,16 +46,31 @@ npm run preview  # ビルド後のプレビュー
 - React + TypeScript + Vite + Tailwind CSS
 - 状態管理: なし(useStateのみ)。ルーティングライブラリは使わず、画面切り替えは`App.tsx`のstateで行う
 - データ: localStorage(キー: `compare-note:v1`)。バックエンド・APIサーバー・認証なし
-- テスト: Vitest + jsdom + @testing-library/react(画面テスト)
+- テスト: Vitest + jsdom + @testing-library/react(画面テスト、計78件)
+- ホスティング: Vercel(静的配信、環境変数不要)
 
-## 現在の実装範囲(Day4まで)
+## 現在の実装範囲
 
 - 画面1(案件一覧): 新規案件作成フォーム(タイトル必須・context任意)、更新日・回答件数・決定状態バッジ付きのカード表示(updatedAt降順)、削除(確認あり)、空状態
-- 画面2(案件詳細)状態A(未決定): タイトル・context・回答件数・決定状態バッジ、候補回答の追加フォーム(source選択+content貼り付け)、候補回答のレスポンシブな比較表示(2件はグリッド、3件以上は横スクロール、モバイルは1列)、各回答の編集・削除、各候補への採用選択(ラジオボタン)
-- 画面2(案件詳細)状態B(決定済み): 決定の記録(採用candidate・採用理由reason必須・decisionSummary任意)、決定サマリーカード(採用元source・content・reason・decisionSummary・決定日時)、「編集する」(採用candidate・reason・decisionSummaryの再編集)、「決定をやり直す」(確認ダイアログ→決定を削除し状態Aへ戻る)。比較した他の候補は決定後も引き続き表示。採用済みの候補は削除不可(ボタン無効化)
+- 画面2(案件詳細)状態A(未決定): 候補回答の追加フォーム(source選択+content貼り付け)、レスポンシブな比較表示(2件はグリッド、3件以上は横スクロール、モバイルは1列)、各回答の編集・削除、各候補への採用選択(ラジオボタン)
+- 画面2(案件詳細)状態B(決定済み): 決定の記録(採用candidate・採用理由reason必須・decisionSummary任意)、決定サマリーカード、「編集する」「決定をやり直す」。採用済みの候補は削除不可
 
-詳細は[PROJECT_STATUS.md](./PROJECT_STATUS.md)、[resume.md](./resume.md)を参照。
+詳細な設計判断は[docs/](./docs/)の仕様書、進捗の詳細は[PROJECT_STATUS.md](./PROJECT_STATUS.md)・[resume.md](./resume.md)を参照。
+
+- [issue-001_mvp_spec.md](./docs/issue-001_mvp_spec.md) — 何を作るか・何を作らないか
+- [issue-001_user_flow.md](./docs/issue-001_user_flow.md) — 画面遷移・状態設計
+- [issue-001_data_schema.md](./docs/issue-001_data_schema.md) — データ構造
+- [issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) — Day1〜7の実装計画
+- [day5_dogfooding_report.md](./docs/day5_dogfooding_report.md) — 実案件3件でのDogfooding結果
+- [day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) — 改善候補(Must/Should/Do Not Fix)
+- [CHANGELOG.md](./CHANGELOG.md) — リリースノート
+
+## 今後の予定
+
+- **Day7**: 初期10人への案内・フィードバック収集([docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md))
+- Should Fix: sourceプリセットに「Claude Code」を追加(SF-1)、「回答を追加」フォームの位置見直し(SF-2)。いずれもMust Fixではないため未着手([day5_improvement_backlog.md](./docs/day5_improvement_backlog.md))
+- 課金導線は現時点で未実装。無料版での利用実績(案件数・決定記録の完了率・継続利用)を見てから検討する([issue-001_launch_plan.md](./docs/issue-001_launch_plan.md))
 
 ## データの保存について
 
-このアプリのデータはブラウザ単位で保存される。同じ人でもPCとスマホ、別のブラウザでは共有されない。キャッシュ削除・シークレットモードでは消える。詳細は[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)を参照。
+このアプリのデータはブラウザ単位で保存されます。同じ人でもPCとスマホ、別のブラウザでは共有されません。キャッシュ削除・シークレットモードでは消えます。詳細は[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)を参照。

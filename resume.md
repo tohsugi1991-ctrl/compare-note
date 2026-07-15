@@ -10,11 +10,11 @@
 
 ## 今どこまで進んでいるか(1行)
 
-**Day4(画面2 状態B: 決定記録・意思決定保存)完了。候補への採用選択(ラジオボタン、1件でも可)、reason必須・decisionSummary任意の決定フォーム、決定サマリーカード(採用元・content・reason・decisionSummary・決定日時)、「編集する」(再編集)・「決定をやり直す」(確認後に削除して状態Aへ)、採用済みcandidateの削除拒否を実装。ユニットテスト78件(storage.test.ts 41件+ProjectsScreen 9件+ProjectDetailScreen 28件)が全件パス、Playwrightで実ブラウザ動作(案件作成→候補2件追加→採用選択→reason/decisionSummary入力→決定保存→決定済み表示→リロード相当→一覧の決定済みバッジ確認→詳細再オープンで保持確認→決定をやり直す→未決定に復帰→モバイル375px確認)を確認済み。**
+**Day5(実案件3件でのdogfooding + 改善点抽出)完了。白子町総合計画・香取市KPI診断・IdeaForge Phase6着手判断の3案件で、案件作成→候補2件登録→横並び比較→採用選択→採用理由記録→decisionSummary記録→一覧へ戻る→(別作業を挟んで再訪)→決定内容の即時理解、まで一通り確認。長文貼り付け(約16,000文字)もエラー・崩れなし。Must Fixは0件でコード変更なし(既存78件のユニットテストもDay4時点のまま)。Kill Criteria仮判定は4項目中0項目該当でピボット不要。詳細は[docs/day5_dogfooding_report.md](./docs/day5_dogfooding_report.md)・[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)。**
 
 ## 次に何をするか(1行)
 
-**Day5「通し動作確認 + 自分自身での実案件投入(dogfooding)」に着手する**: 白子町次期総合計画・香取市案件など進行中の実案件のうち最低2件で実際にComparisonToDecisionフローを使い、UIの分かりにくい箇所・レスポンシブ崩れを修正、localStorage容量超過時や極端に長いテキスト貼り付け時の最低限のエラー表示を追加する。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day5節、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 5節。
+**Day6「Vercelへのデプロイ + 告知文の準備」に着手する**: 本番URLを確認し、favicon等の最低限の体裁を整え、「データはこのブラウザだけに保存されます」という一言をUIに追加、[docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md)の告知文下書きを仕上げる。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day6節、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 5節。余力があればDay5で見つけたSF-1(sourceプリセットに「Claude Code」を追加)を合間に着手してもよい(Must Fixではないため必須ではない)。
 
 ## 見失いやすい前提(再確認用)
 
@@ -27,11 +27,13 @@
 - 7日後の成功条件・Kill Criteriaは自動計測せず、初期10人への直接ヒアリングで判定する([docs/issue-001_validation_plan.md](./docs/issue-001_validation_plan.md))
 - `createProject`はDay2からタイトル必須(空文字・空白のみは例外をthrow)。UIのフォームも合わせてボタンを無効化している(二重の防御)
 
-## 既知の制約(Day4時点)
+## 既知の制約(Day5時点)
 
 - ドラッグによる候補の並べ替えは未実装(`order`は追加順のまま固定)
 - 一覧からのタイトル・context編集導線はまだない
-- localStorageのQuotaExceededError時のエラー表示は未対応(Day5で追加予定)
+- localStorageのQuotaExceededError時のエラー表示は未対応。Day5のdogfooding(実案件3件相当)では発生せず、対応を意図的に見送った(Do Not Fix yet、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) DNF-1)
+- 極端に長いテキスト貼り付け(約16,000文字で検証済み)は、既存の`max-h-80 overflow-y-auto`で崩れずに表示できることをDay5で確認済み。追加のエラー表示は不要と確定した
+- sourceプリセット(`CANDIDATE_SOURCE_OPTIONS`)に「Claude Code」が含まれていない。Day5のdogfooding3案件すべてで「Other」経由の追加入力が発生したShould Fix項目(未対応のまま、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) SF-1)
 - 決定後に採用candidateのcontent/sourceを編集すると、決定サマリーの表示内容も編集後のものに変わる(スナップショットは保存しない設計。ただし採用済みcandidateの削除自体は拒否されるため、Decisionの参照が壊れることはない)
 
 ## 関連プロジェクト

@@ -66,6 +66,14 @@ export function ProjectsScreen({ onOpenProject }: ProjectsScreenProps) {
         )}
       </header>
 
+      <p className="mb-8 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        複数AIの回答を横に並べて比較し、選んだ理由を残せるノートです。
+        <br />
+        ChatGPT・Claude・Geminiなど複数のAIを使い分けている人向け。
+        <br />
+        「どの回答を採用したか、なぜか」を忘れて後で困る、をなくします。
+      </p>
+
       {isFormOpen && (
         <form
           onSubmit={handleSubmit}

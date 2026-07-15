@@ -1,7 +1,7 @@
 # PROJECT_STATUS: AI比較ノート(compare-note)
 
 最終棚卸し日: 2026-07-15
-現在のフェーズ: **Day4(画面2 状態B: 決定記録・意思決定保存)完了**
+現在のフェーズ: **Day6(公開準備: ビルド・README・CHANGELOG・告知文・フィードバックフォーム項目・GitHub/Vercel公開準備)完了**
 
 ---
 
@@ -64,12 +64,22 @@
 - テスト: `storage.test.ts`に17件追加(create/update/deleteDecisionの正常系・バリデーション・重複拒否・既存データ互換・採用済みCandidate削除拒否など)、`ProjectDetailScreen.test.tsx`に16件追加、`ProjectsScreen.test.tsx`に1件追加。既存の46件は1件(採用中候補削除の挙動)を新仕様に合わせて更新した上で全て維持し、合計78件が全通過
 - Playwrightで実ブラウザ動作を確認(devサーバー起動 → 案件作成 → 候補2件追加 → 1件を選択 → reason/decisionSummary入力 → 決定保存 → 決定済み表示 → リロード相当(SPA仕様により一覧へ) → 一覧で決定済みバッジ確認 → 詳細再オープンで採用candidate・reason・decisionSummaryの保持確認 → 決定をやり直す → 未決定状態に戻り両候補が残ることを確認 → モバイル幅375pxで表示確認、の一連。コンソールエラーなし)
 
+### Day5: 実案件3件でのdogfooding + 改善点抽出(2026-07-15完了)
+
+- 新機能は追加せず、実際に進行中の案件3件(白子町総合計画・香取市KPI診断・IdeaForge Phase6着手判断)でComparisonToDecisionフロー(案件作成→context入力→候補2件登録→横並び比較→採用選択→採用理由記録→decisionSummary記録→一覧へ戻る)を実施
+- Playwright(永続ブラウザプロファイル)で実ブラウザ操作を実行し、3案件とも決定記録まで完了。ブラウザプロセスを一度終了させ、`storage.ts`のエッジケース調査等の別作業を挟んだ後に同一プロファイル(同一localStorage)で再訪し、3案件とも決定カード(採用元・理由・decisionSummary・決定日時)が画面最上部に即座に表示されることを確認(H2価値仮説を支持)
+- 追加で、7day_plan Day5節に記載されていた懸念事項「極端に長いテキスト貼り付け時のエラー表示」を実際に約16,000文字のテキストで検証した結果、既存の`max-h-80 overflow-y-auto`実装により**エラー・レイアウト崩れとも発生しないことを確認**。追加のエラー表示実装は不要と判明(対応不要という形で当該懸念はクローズ)
+- localStorage容量超過(QuotaExceededError)は今回の利用規模(実案件3件+検証用データ)では発生せず、対応は見送り(Do Not Fix yetとしてバックログに記録)
+- 発見した改善候補は2件(いずれもShould Fix、Must Fixなし): sourceプリセットに「Claude Code」がなく毎回Other経由の追加入力が必要(SF-1)、「回答を追加」フォームが比較セクションより常に上に固定表示されスクロールが必要(SF-2)。詳細は[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)
+- Kill Criteria仮判定: 4項目中0項目が該当(貼り付けの面倒さ・採用理由記入の価値・再訪時の有用性・既存メモとの比較のいずれもCompare Note側が優位)。ピボット検討は不要と判断
+- Must Fixが0件のため、**コード変更は行わなかった**(`git status`で`src/`配下の差分なしを確認済み、既存78件のユニットテストもDay4時点から変更なし)
+- 成果物: [docs/day5_dogfooding_report.md](./docs/day5_dogfooding_report.md)(実案件ごとの記録・数値評価・Kill Criteria仮判定)、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)(改善候補のMust/Should/Do Not Fix分類)
+
 ---
 
-## 3. まだ未着手の項目(Day5以降)
+## 3. まだ未着手の項目(Day6以降)
 
-- [ ] dogfooding(白子町次期総合計画・香取市案件での実利用)・バグ修正(Day5)
-- [ ] Vercelデプロイ・告知文準備(Day6)
+- [ ] Vercelデプロイ・告知文準備(Day6)。余力があればSF-1(sourceプリセットに「Claude Code」追加)を合間に着手
 - [ ] 公開・初期10人への案内(Day7)
 
 ---
@@ -79,7 +89,9 @@
 - ドラッグによる候補の並べ替えは未実装(仕様通り、`order`は追加順のまま固定)
 - SPAのため画面遷移はURLに反映されない。ブラウザリロードすると常に案件一覧画面に戻る(案件詳細への直接リンク・ディープリンクは未対応)。データ自体はlocalStorageに保存されているため、一覧から再度開けば内容は保持されている
 - 案件一覧の並び順は`updatedAt`降順固定。並べ替えUI・検索・フィルタ・タグ・フォルダは仕様通り持たない
-- localStorageの制約(端末・ブラウザをまたがない、キャッシュ削除で消える、容量上限、QuotaExceededError時のエラー表示なし)は[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)の記載通りDay4時点でも未対応。エラー表示はDay5で追加予定
+- localStorageの制約(端末・ブラウザをまたがない、キャッシュ削除で消える、容量上限、QuotaExceededError時のエラー表示なし)は[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)の記載通り引き続き未対応。Day5のdogfooding(実案件3件相当のデータ量)では発生しなかったため、Do Not Fix yetとして意図的に見送り(詳細は[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) DNF-1)
+- 極端に長いテキスト貼り付け(約16,000文字で検証)は、既存の`max-h-80 overflow-y-auto`実装で崩れずに表示できることをDay5で確認済み。追加のエラー表示は不要と判断し対応しないことを確定した([docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) DNF-2)
+- sourceプリセット(`CANDIDATE_SOURCE_OPTIONS`)に「Claude Code」が含まれていない。Day5のdogfooding3案件すべてで「Other」経由の追加入力が発生したShould Fix項目(詳細は[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) SF-1)。Must Fixではないため未対応のまま
 - 画面テスト(`ProjectsScreen.test.tsx`/`ProjectDetailScreen.test.tsx`)は`@testing-library/react`のみ導入し、`@testing-library/jest-dom`は未導入(標準アサーションで代替し、依存を最小限に留めた)
 - Decisionは`decidedAt`1つのみを持ち、初回決定日時と更新日時を区別しない(編集のたびに上書き)。既存の[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)の設計判断をDay4でもそのまま踏襲した
 - 決定後に採用したcandidateのcontent/sourceを編集すると、決定サマリーにも編集後の内容がそのまま反映される(スナップショットを保存しない設計のため)。ただし採用済みcandidate自体の削除はDay4から不可になったため、決定の参照(`selectedResponseId`)が壊れることはない
@@ -88,7 +100,7 @@
 
 ## 5. 次にやるべきこと(1件)
 
-> **Day5「通し動作確認 + 自分自身での実案件投入(dogfooding)」に着手する**: 白子町次期総合計画・香取市案件など、実際に進行中の案件のうち最低2件で実際にComparisonToDecisionフロー(案件作成→候補貼り付け→比較→決定)を使う。UIの分かりにくい箇所・レスポンシブ崩れを修正し、localStorage容量超過時や極端に長いテキスト貼り付け時の最低限のエラー表示を追加する。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day5節。
+> **Day6「Vercelへのデプロイ + 告知文の準備」に着手する**: Day5のdogfoodingでMust Fixが0件だったため、コード変更なしでそのままDay6に進む。本番URLを確認し、favicon等の最低限の体裁を整え、「データはこのブラウザだけに保存されます」という一言をUIに追加する。告知文の下書きは[docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md)を参照。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day6節。余力があればSF-1(sourceプリセットへの「Claude Code」追加、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)参照)を合間に着手してもよい(必須ではない)。
 
 ---
 
