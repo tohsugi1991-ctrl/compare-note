@@ -75,12 +75,25 @@
 - Must Fixが0件のため、**コード変更は行わなかった**(`git status`で`src/`配下の差分なしを確認済み、既存78件のユニットテストもDay4時点から変更なし)
 - 成果物: [docs/day5_dogfooding_report.md](./docs/day5_dogfooding_report.md)(実案件ごとの記録・数値評価・Kill Criteria仮判定)、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)(改善候補のMust/Should/Do Not Fix分類)
 
+### Day6: 公開・初回ユーザー検証(2026-07-15完了)
+
+- Must Fix以外の機能追加は行わず(ルール通り)、`src/screens/ProjectsScreen.tsx`のトップページに3行のみのサービス説明(何をするアプリか・誰向けか・何を解決するか)を追加。それ以外の画面・ロジックは変更なし
+- 公開前チェック: `npm run lint`・`npm run test`(78件)・`npm run build`をゼロエラーで確認。加えてPlaywrightで「案件作成→回答追加(2件)→決定保存→一覧へ戻る→再訪」の一連を、ローカルpreviewと本番Vercel URLの両方に対して実行し、全項目パス・コンソールエラーなしを確認
+- README.mdを刷新: 概要・スクリーンショット2枚(架空のデモデータで撮影。実際の業務案件名を含む初回スクリーンショットは公開前に破棄し撮り直し済み)・使い方・技術構成・今後の予定を追加
+- [CHANGELOG.md](./CHANGELOG.md)にv0.1.0のリリースノートを作成
+- [docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md): Google Form相当のフィードバック質問項目(最大6問)を作成
+- [docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md): X投稿(日本語・約140文字)、note記事冒頭(日本語・約430文字)、Product Hunt紹介文(英語)、Reddit投稿文(英語)の告知文ドラフトを作成
+- Git: `v0.1.0`のアノテートタグを作成
+- GitHub: `tohsugi1991-ctrl/compare-note`をpublicリポジトリとして新規作成し、`main`ブランチと`v0.1.0`タグをpush済み(https://github.com/tohsugi1991-ctrl/compare-note)
+- Vercel: 環境変数不要の静的サイトとして本番デプロイ完了。本番URL: **https://compare-note.vercel.app**(Vercel側のGitHub連携は権限不足で自動リンクに失敗したが、CLIからのデプロイ自体は成功。次回以降は`vercel --prod`で再デプロイするか、Vercel管理画面からGitHub連携を設定する)
+
 ---
 
-## 3. まだ未着手の項目(Day6以降)
+## 3. まだ未着手の項目(Day7以降)
 
-- [ ] Vercelデプロイ・告知文準備(Day6)。余力があればSF-1(sourceプリセットに「Claude Code」追加)を合間に着手
-- [ ] 公開・初期10人への案内(Day7)
+- [ ] 公開・初期10人への案内(Day7)。告知文は[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)、フィードバック項目は[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)を使う
+- [ ] Vercel管理画面からGitHubリポジトリとの連携を設定する(以後のコミットで自動デプロイさせたい場合)
+- [ ] 余力があればSF-1(sourceプリセットに「Claude Code」追加)・SF-2(回答追加フォームの位置)に着手
 
 ---
 
@@ -100,7 +113,7 @@
 
 ## 5. 次にやるべきこと(1件)
 
-> **Day6「Vercelへのデプロイ + 告知文の準備」に着手する**: Day5のdogfoodingでMust Fixが0件だったため、コード変更なしでそのままDay6に進む。本番URLを確認し、favicon等の最低限の体裁を整え、「データはこのブラウザだけに保存されます」という一言をUIに追加する。告知文の下書きは[docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md)を参照。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day6節。余力があればSF-1(sourceプリセットへの「Claude Code」追加、[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)参照)を合間に着手してもよい(必須ではない)。
+> **Day7「公開・初期ユーザーへの案内」に着手する**: 本番URL(https://compare-note.vercel.app )が確定したので、[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)の`[URL]`をこのURLに置き換えてからX/noteへ投稿し、知人・個人開発者コミュニティ・Claude Code利用者コミュニティへ直接案内する。フィードバック回収先として[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)の質問項目をGoogle Formとして実際に作成し、そのリンクを案内文に含める。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day7節。
 
 ---
 

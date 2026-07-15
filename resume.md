@@ -10,11 +10,11 @@
 
 ## 今どこまで進んでいるか(1行)
 
-**Day5(実案件3件でのdogfooding + 改善点抽出)完了。白子町総合計画・香取市KPI診断・IdeaForge Phase6着手判断の3案件で、案件作成→候補2件登録→横並び比較→採用選択→採用理由記録→decisionSummary記録→一覧へ戻る→(別作業を挟んで再訪)→決定内容の即時理解、まで一通り確認。長文貼り付け(約16,000文字)もエラー・崩れなし。Must Fixは0件でコード変更なし(既存78件のユニットテストもDay4時点のまま)。Kill Criteria仮判定は4項目中0項目該当でピボット不要。詳細は[docs/day5_dogfooding_report.md](./docs/day5_dogfooding_report.md)・[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md)。**
+**Day6(公開・初回ユーザー検証)完了。トップページに3行のサービス説明を追加(それ以外の機能追加なし)、lint/test(78件)/buildをゼロエラーで確認、Playwrightでローカル・本番URL両方に対し「案件作成→回答追加→決定保存→再訪」を確認。README/CHANGELOG(v0.1.0)を整備し、告知文4種([docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md))とフィードバック質問6問([docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md))を作成。GitHubに`tohsugi1991-ctrl/compare-note`をpublicで新規作成しmain+タグv0.1.0をpush、Vercelに本番デプロイ済み(**https://compare-note.vercel.app**)。**
 
 ## 次に何をするか(1行)
 
-**Day6「Vercelへのデプロイ + 告知文の準備」に着手する**: 本番URLを確認し、favicon等の最低限の体裁を整え、「データはこのブラウザだけに保存されます」という一言をUIに追加、[docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md)の告知文下書きを仕上げる。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day6節、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 5節。余力があればDay5で見つけたSF-1(sourceプリセットに「Claude Code」を追加)を合間に着手してもよい(Must Fixではないため必須ではない)。
+**Day7「公開・初期ユーザーへの案内」に着手する**: [docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)の`[URL]`を本番URL(https://compare-note.vercel.app )に置き換えてX/noteへ投稿し、知人・コミュニティへ直接案内する。[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)の質問項目をGoogle Formとして実際に作成し、案内文にリンクを添える。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day7節、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 5節。
 
 ## 見失いやすい前提(再確認用)
 
