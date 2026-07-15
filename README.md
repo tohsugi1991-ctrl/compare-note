@@ -61,14 +61,20 @@ npm run preview  # ビルド後のプレビュー
 - [issue-001_user_flow.md](./docs/issue-001_user_flow.md) — 画面遷移・状態設計
 - [issue-001_data_schema.md](./docs/issue-001_data_schema.md) — データ構造
 - [issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) — Day1〜7の実装計画
-- [day5_dogfooding_report.md](./docs/day5_dogfooding_report.md) — 実案件3件でのDogfooding結果
-- [day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) — 改善候補(Must/Should/Do Not Fix)
+- [day5_dogfooding_report.md](./docs/day5_dogfooding_report.md) — 実案件3件でのDogfooding結果(Day5)
+- [day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) — 改善候補(Must/Should/Do Not Fix、Day5時点)
+- [day7_light_validation.md](./docs/day7_light_validation.md) — 実案件3件でのDogfooding結果(Day7、Day5とは別の3案件)
+- [competitive_analysis.md](./docs/competitive_analysis.md) — Notion/Obsidian/Apple Notes/VS Code Markdown/Google Docsとの競合比較
+- [ai_design_review.md](./docs/ai_design_review.md) — PM/UX/個人開発者/SaaS創業者/投資家5視点でのレビューと判定・改善案(Must/Should/Could/Won't)
 - [CHANGELOG.md](./CHANGELOG.md) — リリースノート
 
 ## 今後の予定
 
-- **Day7**: 初期10人への案内・フィードバック収集([docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md))
-- Should Fix: sourceプリセットに「Claude Code」を追加(SF-1)、「回答を追加」フォームの位置見直し(SF-2)。いずれもMust Fixではないため未着手([day5_improvement_backlog.md](./docs/day5_improvement_backlog.md))
+Day7の軽量検証(Light Validation)の結果、判定は**Improve**(このまま初期10人への案内には進まず、Must Fix 2件を先に対応してから進める)。詳細は[ai_design_review.md](./docs/ai_design_review.md)を参照。
+
+- **Must Fix(案内前に対応)**: sourceプリセットに「Claude Code」を追加(SF-1、Day5の50%→Day7の100%で発生し悪化)。`exportData`/`importData`(実装・テスト済みだがUI未接続)をエクスポート/インポートボタンとして案件一覧に配線する
+- Must Fix完了後に、初期10人への案内・フィードバック収集([docs/issue-001_launch_plan.md](./docs/issue-001_launch_plan.md))に進む
+- Should Fix: 「回答を追加」フォームの位置見直し(SF-2)
 - 課金導線は現時点で未実装。無料版での利用実績(案件数・決定記録の完了率・継続利用)を見てから検討する([issue-001_launch_plan.md](./docs/issue-001_launch_plan.md))
 
 ## データの保存について

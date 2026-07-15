@@ -1,7 +1,7 @@
 # PROJECT_STATUS: AI比較ノート(compare-note)
 
 最終棚卸し日: 2026-07-15
-現在のフェーズ: **Day6(公開準備: ビルド・README・CHANGELOG・告知文・フィードバックフォーム項目・GitHub/Vercel公開準備)完了**
+現在のフェーズ: **Day7 Light Validation完了。判定=Improve(Must Fix2件対応後に初期10人への案内へ進む)**
 
 ---
 
@@ -87,13 +87,26 @@
 - GitHub: `tohsugi1991-ctrl/compare-note`をpublicリポジトリとして新規作成し、`main`ブランチと`v0.1.0`タグをpush済み(https://github.com/tohsugi1991-ctrl/compare-note)
 - Vercel: 環境変数不要の静的サイトとして本番デプロイ完了。本番URL: **https://compare-note.vercel.app**(Vercel側のGitHub連携は権限不足で自動リンクに失敗したが、CLIからのデプロイ自体は成功。次回以降は`vercel --prod`で再デプロイするか、Vercel管理画面からGitHub連携を設定する)
 
+### Day7: Light Validation(2026-07-15完了)
+
+- 当初計画の「初期10人への案内」は今回実施せず、代わりに軽量検証(dogfooding再実施→競合比較→AIレビュー→判定)を行った(ユーザー本人の指示による方針変更)
+- **Phase1**: Day5とは別の実案件3件(白子町P14分割・再配置の採否/香取市PowerPoint作成Go-No-Go判定/proposal_pattern_library次にやること着手順位)でComparisonToDecisionフローをPlaywright(永続プロファイル)で実際に完走。3件とも決定済みバッジ・決定カードの再訪確認まで成功、Must Fix該当のバグは0件。ただしsourceプリセット問題(SF-1)がDay5の50%→Day7の**100%**(3案件とも「Claude Code」がOther経由)に悪化していることを確認。詳細は[docs/day7_light_validation.md](./docs/day7_light_validation.md)
+- **新規発見**: コードレビューにより、`src/lib/storage.ts`の`exportData`/`importData`が実装・テスト済み(`storage.test.ts`)にもかかわらず、UI(`ProjectsScreen.tsx`/`ProjectDetailScreen.tsx`)のどこにも呼び出し箇所が無いことが判明。README.mdの「エクスポート・バックアップ機能は現時点ではありません」という記載と実態(関数は実装済み)にズレがあった
+- **Phase2**: Notion/Obsidian/Apple Notes/VS Code Markdown/Google Docsとの競合比較を実施。「比較のしやすさ」「決定記録の確実性」「再訪速度」の3軸でCompare Noteが優位、「入力の生の速さ(Apple Notes)」「チーム共有・複数端末(Notion/Google Docs)」「検索・蓄積量が増えた場合(Notion/Obsidian)」は他ツールが優位と整理。詳細は[docs/competitive_analysis.md](./docs/competitive_analysis.md)
+- **Phase3**: PM/UXデザイナー/個人開発者/SaaS創業者/投資家の5人格で批判的にレビュー。最大リスクとして「N=1検証のみで他者検証が0件」(PM)・「exportData/importData未接続によるデータ喪失リスク」(UX)・「利用頻度が本質的に低い可能性」(SaaS創業者)・「AIベンダー自体の機能進化に飲み込まれるリスク」(投資家)を指摘。詳細は[docs/ai_design_review.md](./docs/ai_design_review.md)
+- **判定: Improve**。Kill Criteriaには抵触せずPivot/Stopの根拠は無いが、Must Fix2件(sourceプリセットへの「Claude Code」追加/export・importのUI配線)を先に完了させてから初期10人への案内に進むべきと判断
+- 改善案をMust(2件)/Should/Could/Won'tに分類([docs/ai_design_review.md](./docs/ai_design_review.md) 7節)。**今回はコード変更を行っていない**(Must Fixの実装自体は次回セッションで着手する)
+- README.md/PROJECT_STATUS.md/resume.mdをDay7の内容に更新
+
 ---
 
 ## 3. まだ未着手の項目(Day7以降)
 
-- [ ] 公開・初期10人への案内(Day7)。告知文は[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)、フィードバック項目は[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)を使う
+- [ ] **Must Fix(最優先)**: `src/types.ts`の`CANDIDATE_SOURCE_OPTIONS`に「Claude Code」を追加する(SF-1)
+- [ ] **Must Fix(最優先)**: `exportData`/`importData`(実装・テスト済み)をUIに接続する。案件一覧画面にJSONエクスポート/インポートボタンを追加し、README.mdのエクスポート機能に関する記載を更新する
+- [ ] Must Fix2件の完了後、公開・初期10人への案内。告知文は[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)、フィードバック項目は[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)を使う
 - [ ] Vercel管理画面からGitHubリポジトリとの連携を設定する(以後のコミットで自動デプロイさせたい場合)
-- [ ] 余力があればSF-1(sourceプリセットに「Claude Code」追加)・SF-2(回答追加フォームの位置)に着手
+- [ ] Should Fix: 「回答を追加」フォームの位置見直し(SF-2、[docs/ai_design_review.md](./docs/ai_design_review.md) 7節)
 
 ---
 
@@ -104,16 +117,21 @@
 - 案件一覧の並び順は`updatedAt`降順固定。並べ替えUI・検索・フィルタ・タグ・フォルダは仕様通り持たない
 - localStorageの制約(端末・ブラウザをまたがない、キャッシュ削除で消える、容量上限、QuotaExceededError時のエラー表示なし)は[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)の記載通り引き続き未対応。Day5のdogfooding(実案件3件相当のデータ量)では発生しなかったため、Do Not Fix yetとして意図的に見送り(詳細は[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) DNF-1)
 - 極端に長いテキスト貼り付け(約16,000文字で検証)は、既存の`max-h-80 overflow-y-auto`実装で崩れずに表示できることをDay5で確認済み。追加のエラー表示は不要と判断し対応しないことを確定した([docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) DNF-2)
-- sourceプリセット(`CANDIDATE_SOURCE_OPTIONS`)に「Claude Code」が含まれていない。Day5のdogfooding3案件すべてで「Other」経由の追加入力が発生したShould Fix項目(詳細は[docs/day5_improvement_backlog.md](./docs/day5_improvement_backlog.md) SF-1)。Must Fixではないため未対応のまま
+- sourceプリセット(`CANDIDATE_SOURCE_OPTIONS`)に「Claude Code」が含まれていない。Day5(3案件中3回・50%)・Day7(3案件中3回・**100%**)ともに「Other」経由の追加入力が発生しており、悪化傾向にあることからDay7時点でMust Fixに格上げ(詳細は[docs/ai_design_review.md](./docs/ai_design_review.md) 7節)
+- `src/lib/storage.ts`の`exportData`/`importData`は実装・テスト済みだが、UIに呼び出し箇所が一切無い。Day7のコードレビューで判明し、Must Fixに追加(詳細は[docs/ai_design_review.md](./docs/ai_design_review.md) 7節)
 - 画面テスト(`ProjectsScreen.test.tsx`/`ProjectDetailScreen.test.tsx`)は`@testing-library/react`のみ導入し、`@testing-library/jest-dom`は未導入(標準アサーションで代替し、依存を最小限に留めた)
 - Decisionは`decidedAt`1つのみを持ち、初回決定日時と更新日時を区別しない(編集のたびに上書き)。既存の[docs/issue-001_data_schema.md](./docs/issue-001_data_schema.md)の設計判断をDay4でもそのまま踏襲した
 - 決定後に採用したcandidateのcontent/sourceを編集すると、決定サマリーにも編集後の内容がそのまま反映される(スナップショットを保存しない設計のため)。ただし採用済みcandidate自体の削除はDay4から不可になったため、決定の参照(`selectedResponseId`)が壊れることはない
 
 ---
 
-## 5. 次にやるべきこと(1件)
+## 5. 次にやるべきこと(2件、Must Fix)
 
-> **Day7「公開・初期ユーザーへの案内」に着手する**: 本番URL(https://compare-note.vercel.app )が確定したので、[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)の`[URL]`をこのURLに置き換えてからX/noteへ投稿し、知人・個人開発者コミュニティ・Claude Code利用者コミュニティへ直接案内する。フィードバック回収先として[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)の質問項目をGoogle Formとして実際に作成し、そのリンクを案内文に含める。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day7節。
+> **1. `src/types.ts`の`CANDIDATE_SOURCE_OPTIONS`に「Claude Code」を追加する**(SF-1)。配列に1要素追加するのみ(5分未満)。
+>
+> **2. `exportData`/`importData`(実装・テスト済み)をUIに接続する**: 案件一覧画面にJSONエクスポート/インポートボタンを追加し(`Blob`でのファイルダウンロード・`<input type="file">`での読み込み)、README.mdの「エクスポート・バックアップ機能は現時点ではありません」という記載を実態に合わせて更新する。
+>
+> 上記2件のMust Fixが完了したら、**「公開・初期ユーザーへの案内」に着手する**: 本番URL(https://compare-note.vercel.app )が確定しているので、[docs/day6_announcement_drafts.md](./docs/day6_announcement_drafts.md)の`[URL]`をこのURLに置き換えてからX/noteへ投稿し、知人・個人開発者コミュニティ・Claude Code利用者コミュニティへ直接案内する。フィードバック回収先として[docs/day6_feedback_questions.md](./docs/day6_feedback_questions.md)の質問項目をGoogle Formとして実際に作成し、そのリンクを案内文に含める。詳細は[docs/issue-001_7day_plan.md](./docs/issue-001_7day_plan.md) Day7節・[docs/ai_design_review.md](./docs/ai_design_review.md) 6〜7節。
 
 ---
 
